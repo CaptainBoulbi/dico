@@ -22,7 +22,7 @@ sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $word \
   | sed "s/^ *//g"                             \
   | sed "/^$/d"                                >> $dicodir/$langdir/$word.1
 
-# sed cmd in order:
+# sed cmd in okrder:
 
 # get only defbox divs
 # extra box info title
@@ -32,3 +32,11 @@ sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $word \
 # rm html balise
 # rm wild indentation
 # rm empty line
+
+synonyme="personne.syn"
+
+sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $synonyme \
+  | sed "s/.*defbox.*/.SH\nSynonymes/g"            \
+  | sed "s/<[^>]*>//g"                             \
+  | sed "s/^ *//g"                                 \
+  | sed "/^$/d"                                    >> $dicodir/$langdir/$word.1
