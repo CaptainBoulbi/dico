@@ -2,6 +2,9 @@
 # https://www.le-dictionnaire.com/definition/personne
 # https://www.synonymes.com/synonyme.php?mot=personne
 
+defurl="https://www.le-dictionnaire.com/resultats.php?mot="
+synurl="https://www.synonymes.com/resultats.php?mot="
+
 fr_words=$(cat /usr/share/dict/french)
 en_words=$(cat /usr/share/dict/american-english)
 
@@ -10,18 +13,26 @@ langdir="fr"
 sudo mkdir -p $dicodir/$langdir
 sudo chown $USER:$USER -R $dicodir
 
-word="cuisine"
+dwldir="./dwl"
+sudo mkdir -p $dwldir
+sudo chown $USER:$USER -R $dwldir
+
+#word="cuisine"
+word="abaisseur"
+
+wget $defurl$word -O $dwldir/$word
+wget $synurl$word -O $dwldir/$word.syn
 
 echo ".TH $word 1 $word\-1.0" > $dicodir/$langdir/$word
 
-sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $word \
-  | sed "s/.*extraboxinfo.*/.SH/g"             \
-  | sed "s/.*defbox.*/.SH/g"                   \
-  | sed "s/.*motboxinfo\">/.I\n/g"             \
-  | sed "s/.*<li>/.P\n- /g"                    \
-  | sed "s/<[^>]*>//g"                         \
-  | sed "s/^ *//g"                             \
-  | sed "/^$/d"                                >> $dicodir/$langdir/$word
+sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $dwldir/$word \
+  | sed "s/.*extraboxinfo.*/.SH/g"                     \
+  | sed "s/.*defbox.*/.SH/g"                           \
+  | sed "s/.*motboxinfo\">/.I\n/g"                     \
+  | sed "s/.*<li>/.P\n- /g"                            \
+  | sed "s/<[^>]*>//g"                                 \
+  | sed "s/^ *//g"                                     \
+  | sed "/^$/d"                                        >> $dicodir/$langdir/$word
 
 # sed cmd in okrder:
 
@@ -34,10 +45,13 @@ sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $word \
 # rm wild indentation
 # rm empty line
 
-synonyme="$word.syn"
+echo -e ".SH\nSynonymes" >> $dicodir/$langdir/$word
 
-sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $synonyme \
-  | sed "s/.*defbox.*/.SH\nSynonymes/g"            \
-  | sed "s/<[^>]*>//g"                             \
-  | sed "s/^ *//g"                                 \
-  | sed "/^$/d"                                    >> $dicodir/$langdir/$word
+sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $dwldir/$word.syn \
+  | sed "s/^ *<li>/.P\n/g"                                   \
+  | sed "s/<li>/, /g"                                      \
+  | sed "s/<[^>]*>//g"                                     \
+  | sed "s/^ *//g"                                         \
+  | sed "/^$/d"                                            >> $dicodir/$langdir/$word
+
+rm $dwldir/$word $dwldir/$word.syn
