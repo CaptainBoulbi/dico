@@ -12,7 +12,7 @@ sudo chown $USER:$USER -R $dicodir
 
 word="cuisine"
 
-echo ".TH $word 1 $word\-1.0" > $dicodir/$langdir/$word.1
+echo ".TH $word 1 $word\-1.0" > $dicodir/$langdir/$word
 
 sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $word \
   | sed "s/.*extraboxinfo.*/.SH/g"             \
@@ -21,7 +21,7 @@ sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $word \
   | sed "s/.*<li>/.P\n- /g"                    \
   | sed "s/<[^>]*>//g"                         \
   | sed "s/^ *//g"                             \
-  | sed "/^$/d"                                >> $dicodir/$langdir/$word.1
+  | sed "/^$/d"                                >> $dicodir/$langdir/$word
 
 # sed cmd in okrder:
 
@@ -40,4 +40,4 @@ sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $synonyme \
   | sed "s/.*defbox.*/.SH\nSynonymes/g"            \
   | sed "s/<[^>]*>//g"                             \
   | sed "s/^ *//g"                                 \
-  | sed "/^$/d"                                    >> $dicodir/$langdir/$word.1
+  | sed "/^$/d"                                    >> $dicodir/$langdir/$word
