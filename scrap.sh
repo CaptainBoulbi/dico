@@ -5,11 +5,12 @@
 fr_words=$(cat /usr/share/dict/french)
 en_words=$(cat /usr/share/dict/american-english)
 
-dicodir="."
+dicodir="/usr/local/dico"
 langdir="fr"
-mkdir -p $dicodir/$langdir
+sudo mkdir -p $dicodir/$langdir
+sudo chown $USER:$USER -R $dicodir
 
-word="personne"
+word="cuisine"
 
 echo ".TH $word 1 $word\-1.0" > $dicodir/$langdir/$word.1
 
@@ -33,7 +34,7 @@ sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $word \
 # rm wild indentation
 # rm empty line
 
-synonyme="personne.syn"
+synonyme="$word.syn"
 
 sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $synonyme \
   | sed "s/.*defbox.*/.SH\nSynonymes/g"            \
