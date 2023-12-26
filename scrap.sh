@@ -4,11 +4,14 @@
 
 fr_words=$(cat /usr/share/dict/french)
 en_words=$(cat /usr/share/dict/american-english)
+
 dicodir="."
+langdir="fr"
+mkdir -p $dicodir/$langdir
 
 word="personne"
 
-echo ".TH $word 1 $word\-1.0" > $dicodir/$word.1
+echo ".TH $word 1 $word\-1.0" > $dicodir/$langdir/$word.1
 
 sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $word \
   | sed "s/.*extraboxinfo.*/.SH/g"             \
@@ -17,7 +20,7 @@ sed -n -e "/.*defbox.*/,/^ *<\/div>$/ p" $word \
   | sed "s/.*<li>/.P\n- /g"                    \
   | sed "s/<[^>]*>//g"                         \
   | sed "s/^ *//g"                             \
-  | sed "/^$/d"                                >> $dicodir/$word.1
+  | sed "/^$/d"                                >> $dicodir/$langdir/$word.1
 
 # sed cmd in order:
 
